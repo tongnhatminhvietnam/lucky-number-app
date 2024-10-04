@@ -1,59 +1,82 @@
-<!-- user.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tra cứu Số May Mắn</title>
+  <title>Tra cứu số may mắn</title>
   <link rel="stylesheet" href="style.css">
   <style>
     body {
-      background-image: url('background.jpg');
+      background-image: url("background.jpg");
       background-size: cover;
-      color: white; /* Màu chữ trắng để nổi bật trên nền tối */
+      background-position: center;
+      font-family: Arial, sans-serif;
+      color: white; /* Toàn bộ chữ sẽ thành màu trắng */
     }
-    h1, label {
-      text-align: center;
+
+    input {
+      padding: 10px;
+      margin: 10px;
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid white;
+      color: white;
     }
-    .form-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-top: 100px;
+
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    form {
+      background-color: rgba(0, 0, 0, 0.6); /* Làm nổi bật form bằng nền tối bán trong suốt */
+      padding: 20px;
+      border-radius: 10px;
+      display: inline-block;
+      margin-top: 50px;
     }
   </style>
 </head>
 <body>
-  <h1>Tra cứu Số May Mắn</h1>
-  <div class="form-container">
-    <form id="lookupForm">
-      <label for="phone">Vui lòng nhập số điện thoại của bạn:</label>
-      <input type="text" id="phone" name="phone" required>
-      <button type="submit">Tra cứu</button>
-    </form>
-  </div>
+  <h1>Tra cứu số may mắn</h1>
+  <p>Vui lòng nhập số điện thoại của bạn:</p>
+  <input type="text" id="phoneInput" placeholder="Nhập số điện thoại">
+  <br>
+  <button type="button" onclick="searchLuckyNumber()">Tra cứu</button>
+
+  <p id="result"></p>
 
   <script>
-    document.getElementById('lookupForm').addEventListener('submit', function(event) {
-      event.preventDefault(); // Ngăn không tải lại trang khi submit
-      const phone = document.getElementById('phone').value;
-      
-      // Gửi yêu cầu đến server để tra cứu số may mắn
+    function searchLuckyNumber() {
+      const phone = document.getElementById('phoneInput').value;
+
+      if (!phone.trim()) {
+        alert("Vui lòng nhập số điện thoại!");
+        return;
+      }
+
       fetch('/getLuckyNumber', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: JSON.stringify({ phone: phone })
+        body: `phone=${encodeURIComponent(phone)}`
       })
       .then(response => response.text())
       .then(data => {
-        alert(data); // Hiển thị kết quả trả về từ server
+        document.getElementById('result').innerText = data;
       })
       .catch(error => {
         console.error('Error:', error);
       });
-    });
+    }
   </script>
 </body>
 </html>
